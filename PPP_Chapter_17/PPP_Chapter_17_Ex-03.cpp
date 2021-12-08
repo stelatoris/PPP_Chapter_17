@@ -23,8 +23,8 @@ void to_lower(char* s)
 
 int main()
 try {	
-	string s{ "Hello, world!" };
-	to_lower(&s[0]);	
+	char s[]{ "Hello, world!" };
+	to_lower(s);	
 }
 
 catch (exception& e) {
