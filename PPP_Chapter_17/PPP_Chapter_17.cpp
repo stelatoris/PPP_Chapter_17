@@ -6,25 +6,24 @@
 #include "std_lib_facilities.h"
 
 char* my_strdup(const char* c)
-{	
+{
 	if (!c) return nullptr;
-	
+
 	int n{ 0 };;
-	while (c[n] != 0) {
-		if (c[n] == 0) break;
+	while (c[n]) {
 		++n;
 	}
 
 	char* ch = new char[n];
-	for (int i = 0; i < n+1; ++i) {
+	for (int i = 0; i < n + 1; ++i) {
 		ch[i] = c[i];
-		if (i == n)ch[i] = 0;
 	}
+	ch[n] = 0;
 	return ch;
 }
 
 int main()
-try {	
+try {
 	const char* s{ "Hello, world!" };
 	char* cstring = my_strdup(s);
 
