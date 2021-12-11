@@ -9,7 +9,7 @@ char* my_strdup(const char* c)
 {
 	if (!c) return nullptr;
 
-	int n{ 0 };;
+	int n{ 0 };
 	while (c[n]) {
 		++n;
 	}

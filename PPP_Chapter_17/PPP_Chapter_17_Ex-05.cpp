@@ -1,6 +1,7 @@
 //	PPP Chapter 17 Ex 05
 //	5. Write a function, char* findx(const char* s, const char* x), that finds the
 //	first occurrence of the C - style string x in s.
+// Thank you Yabe for the help!
 
 #include "std_lib_facilities.h"
 
