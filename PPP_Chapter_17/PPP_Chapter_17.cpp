@@ -1,13 +1,34 @@
-//	PPP Chapter 17 Ex 10
-//11. Complete the “list of gods” example from §17.10.1 and run it.
+//	PPP Chapter 17 Ex 13
+// 
+//	13. Modify the Link class from §17.10.1 to hold a value of a struct God.
+//	struct God should have members of type string : name, mythology, vehicle,
+//	and weapon.For example, God{ "Zeus", "Greek", "", "lightning" }
+//	and God{ "Odin", "Norse", "Eight-legged flying horse called Sleipner",
+//	"Spear called Gungnir" }. Write a print_all() function that lists gods with
+//	their attributes one per line.Add a member function add_ordered() that
+//	places its new element in its correct lexicographical position.Using the
+//	Links with the values of type God, make a list of gods from three mythologies;
+//	then move the elements(gods) from that list to three lexicographically
+//	ordered lists — one for each mythology.
 
 #include "std_lib_facilities.h"
 
 class Link {
-public:
-	string value;
-	Link(const string& v, Link* p = nullptr, Link* s = nullptr)
-		: value{ v }, prev{ p }, succ{ s } { }
+public:	
+	Link(string n, string m, string v, string w, Link* p = nullptr, Link* s = nullptr)
+		: god{ n, m, v, w }, prev{ p }, succ{ s } { }
+
+	struct God {
+		God(string n, string m, string v, string w)
+			: name{ n }, mythology{ m }, vehicle{ v }, weapon{ w } { }
+
+		string name;
+		string mythology;
+		string vehicle;
+		string weapon;
+	};	
+
+	God god;
 
 	Link* insert(Link* n); // insert n before this object
 	Link* add(Link* n); // insert n after this object
@@ -60,7 +81,7 @@ Link* Link::find(const string& s) // find s in list;
 {
 	Link* p = this;
 	while (p) {
-		if (p-> value == s) return p;
+		if (p->god.name == s) return p;
 		p = next();
 	}
 	return nullptr;
@@ -91,7 +112,7 @@ void print_all(Link* p)
 {
 	cout << "{ ";
 	while (p) {
-		cout << p-> value;
+		cout << p->god.name;
 		if (p = p-> next()) cout << ", ";
 	}
 	cout << " }";
@@ -101,6 +122,7 @@ void print_all(Link* p)
 int main()
 try {
 
+	/*
 	Link* norse_gods = new Link{ "Thor" };
 	norse_gods = norse_gods-> insert(new Link{ "Odin" });
 	norse_gods = norse_gods-> insert(new Link{ "Zeus" });
@@ -125,6 +147,7 @@ try {
 	cout << "\n";
 	print_all(greek_gods);
 	cout << "\n";
+	*/
 
 	return 0;
 }
