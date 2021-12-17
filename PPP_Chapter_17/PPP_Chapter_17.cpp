@@ -37,6 +37,7 @@ public:
 	const Link* find(const string& s) const; // find s in const list (see §18.5.1)
 
 	Link* advance(int n) const; // move n positions in list
+	Link* add_ordered(Link* n);	// order in lexicographical order
 
 	Link* next() const { return succ; }
 	Link* previous() const { return prev; }
@@ -82,7 +83,7 @@ Link* Link::find(const string& s) // find s in list;
 	Link* p = this;
 	while (p) {
 		if (p->god.name == s) return p;
-		p = next();
+		p = succ;
 	}
 	return nullptr;
 }
@@ -108,19 +109,88 @@ Link* Link::advance(int n) const // move n positions in list
 	return p;
 }
 
+Link* Link::add_ordered(Link* n)
+{
+	Link* p = this;
+
+	//while (p) {
+		if (n == nullptr) return p;
+		if (p == nullptr) return n;
+		if (p->god.name < n->god.name) {	// if n is larger than this
+			n = add(n);
+			//n->prev = p;	//place n after this
+			//p->succ = n;
+			return n;
+		}
+		if (n->god.name < p->god.name) {
+			n = insert(n);
+			/*n->succ = p;
+			p->prev = n;
+			p->prev->succ = n;*/
+			return p;
+		}
+	//}	
+
+}
+
+//Link* Link::insert(Link* n) // insert n before this object; return n
+//{
+//	if (n == nullptr) return this;
+//	if (this == nullptr) return n;
+//	n->succ = this; // this object comes after n
+//	if (prev) prev->succ = n;
+//	n->prev = prev; // this object’s predecessor becomes n’s predecessor
+//	prev = n; // n becomes this object’s predecessor
+//	return n;
+//}
+
+//Link* Link::add(Link* n) // insert n after p; return n
+//{
+//	if (n == nullptr) return this;
+//	if (this == nullptr) return n;
+//	n->prev = this; // this object comes before n
+//	if (succ) succ->prev = n;
+//	n->succ = succ;	//this objects successor becomes n's successor
+//	succ = n;
+//	return n;
+//}
+
 void print_all(Link* p)
 {
-	cout << "{ ";
 	while (p) {
-		cout << p->god.name;
-		if (p = p-> next()) cout << ", ";
+		if (!p->previous()) break;
+		p = p->previous();
 	}
-	cout << " }";
+	
+	if (p->god.mythology == "Norse") cout << "Norse gods:\n";
+	else cout << "Greek gods:\n";
+
+	while (p) {		
+		cout <<'-' << p->god.name << ',' << p->god.mythology
+			<< ',' << p->god.vehicle << ',' << p->god.weapon;
+		if (p = p->next()) cout << '\n';
+	}
 }
+
+// name{ n }, mythology{ m }, vehicle{ v }, weapon{ w } { }
 
 
 int main()
 try {
+
+	
+	/*Link* norse_gods = new Link{ "Odin", "Norse", "Eight-legged flying horse called Sleipner","Spear called Gungnir" };
+	norse_gods = norse_gods->insert(new Link{ "Thor", "Norse", "Goat chariot","Hammer" });
+	
+	print_all(norse_gods);
+	cout << "\n";*/
+
+	Link* test = new Link{ "ac","Norse","vehcle","weapon" };
+	test = test->add_ordered(new Link{ "aa","Norse","vehcle","weapon" });
+	test = test->add_ordered(new Link{ "ab","Norse","vehcle","weapon" });
+
+
+	print_all(test);
 
 	/*
 	Link* norse_gods = new Link{ "Thor" };
