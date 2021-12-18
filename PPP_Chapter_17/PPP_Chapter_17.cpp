@@ -113,47 +113,30 @@ Link* Link::add_ordered(Link* n)
 {
 	Link* p = this;
 
-	//while (p) {
-		if (n == nullptr) return p;
-		if (p == nullptr) return n;
-		if (p->god.name < n->god.name) {	// if n is larger than this
-			n = add(n);
-			//n->prev = p;	//place n after this
-			//p->succ = n;
-			return n;
-		}
-		if (n->god.name < p->god.name) {
-			n = insert(n);
-			/*n->succ = p;
-			p->prev = n;
-			p->prev->succ = n;*/
-			return p;
-		}
-	//}	
+	while (p) {
 
+		if (n->god.name < p->god.name) {			// if n is smaller than this(p)
+			if (p->prev == nullptr) {				// if this(p) is 1st link
+				p=p->insert(n);
+				return p;
+			}
+			else p = p->advance(-1);
+		}
+		else if (p->god.name < n->god.name) {		// if n is larger than this(p)
+			if (p->succ == nullptr) {
+				p=p->add(n);
+				return p;
+			}
+			else if (n->god.name < p->succ->god.name) {
+				p = p->add(n);
+				return p;
+			}
+			else p = p->advance(1);
+		}
+	}
 }
 
-//Link* Link::insert(Link* n) // insert n before this object; return n
-//{
-//	if (n == nullptr) return this;
-//	if (this == nullptr) return n;
-//	n->succ = this; // this object comes after n
-//	if (prev) prev->succ = n;
-//	n->prev = prev; // this object’s predecessor becomes n’s predecessor
-//	prev = n; // n becomes this object’s predecessor
-//	return n;
-//}
 
-//Link* Link::add(Link* n) // insert n after p; return n
-//{
-//	if (n == nullptr) return this;
-//	if (this == nullptr) return n;
-//	n->prev = this; // this object comes before n
-//	if (succ) succ->prev = n;
-//	n->succ = succ;	//this objects successor becomes n's successor
-//	succ = n;
-//	return n;
-//}
 
 void print_all(Link* p)
 {
@@ -188,8 +171,13 @@ try {
 	Link* test = new Link{ "ac","Norse","vehcle","weapon" };
 	test = test->add_ordered(new Link{ "aa","Norse","vehcle","weapon" });
 	test = test->add_ordered(new Link{ "ab","Norse","vehcle","weapon" });
-
-
+	test = test->add_ordered(new Link{ "aac","Norse","vehcle","weapon" });
+	test = test->add_ordered(new Link{ "aaa","Norse","vehcle","weapon" });
+	test = test->advance(2);
+	cout << "Current link: " << test->god.name << '\n';
+	test = test->add_ordered(new Link{ "aaaa","Norse","vehcle","weapon" });
+	test = test->add_ordered(new Link{ "a","Norse","vehcle","weapon" });
+	test = test->add_ordered(new Link{ "z","Norse","vehcle","weapon" });
 	print_all(test);
 
 	/*
