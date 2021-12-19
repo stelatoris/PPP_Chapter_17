@@ -83,7 +83,7 @@ Link* Link::find(const string& s) // find s in list;
 	Link* p = this;
 	while (p) {
 		if (p->god.name == s) return p;
-		p = succ;
+		p = p->succ;
 	}
 	return nullptr;
 }
@@ -136,7 +136,30 @@ Link* Link::add_ordered(Link* n)
 	}
 }
 
+void lexicograph_order(Link* in, Link* out)
+{
+	while (in) {	// go back to 1st Link
+		if (!in->previous()) break;
+		in = in->previous();
+	}
 
+	string myth = out->god.mythology;	//which mythology to search for?
+	
+	while (in) {
+		if (in->god.mythology == myth) {	// extract only gods from specified mythology
+			Link* s = out->find(in->god.name);
+			if (s==nullptr){
+				Link* p = in;				// copy link to temp
+				in = in->erase();			// delete link from original list
+				out = out->add_ordered(p);	// add the link from temp
+			}
+			else if (s->god.name == in->god.name) {
+				cout << in->god.name << " already entered." << '\n';
+			}						
+		}
+		else in = in->next();				// keep going through the list
+	}
+}
 
 void print_all(Link* p)
 {
@@ -146,7 +169,9 @@ void print_all(Link* p)
 	}
 	
 	if (p->god.mythology == "Norse") cout << "Norse gods:\n";
-	else cout << "Greek gods:\n";
+	else if(p->god.mythology == "Roman") cout << "Roman gods:\n";
+	else if (p->god.mythology == "Greek") cout << "Greek gods:\n";
+	else {}
 
 	while (p) {		
 		cout <<'-' << p->god.name << ',' << p->god.mythology
@@ -155,57 +180,42 @@ void print_all(Link* p)
 	}
 }
 
-// name{ n }, mythology{ m }, vehicle{ v }, weapon{ w } { }
-
-
 int main()
 try {
 
+	// name{ n }, mythology{ m }, vehicle{ v }, weapon{ w } { }
+	Link* gods = new Link{ "Hades ","Greek","","The Helm of Darkness" };
+	gods = gods->add(new Link{ "Poseidon ","Greek","The Chariot of the Sea","The Trident of Poseidon" });	
+	gods = gods->add(new Link{ "Saturn ","Roman","","Scythe" });
+	gods = gods->add(new Link{ "Aphrodite","Greek","","Cestus " });
+	gods = gods->add(new Link{ "Odin","Norse","Eight-legged flying horse, Sleipnir","Gungnir the spear" });
+	gods = gods->add(new Link{ "Freya ","Norse","cats of Freya","Dainsleif (sword)" });
+	gods = gods->add(new Link{ "Jupiter ","Roman","","Lightning Bolt" });
+	gods = gods->add(new Link{ "Heimdall","Norse","","Gjallarhorn the Yelling Horn" });
+	gods = gods->add(new Link{ "Vidar","Norse","","Vidar's Shoes" });
+	gods = gods->add(new Link{ "Ullr ","Norse","","Arrow" });
+	gods = gods->add(new Link{ "Athena","Greek","","The Aegis" });
+	gods = gods->add(new Link{ "Juno","Roman","Cart","Spear" });
+	gods = gods->add(new Link{ "Minerva","Roman","","Spear" });
+	gods = gods->add(new Link{ "Mars","Roman","","Spear" });
 	
-	/*Link* norse_gods = new Link{ "Odin", "Norse", "Eight-legged flying horse called Sleipner","Spear called Gungnir" };
-	norse_gods = norse_gods->insert(new Link{ "Thor", "Norse", "Goat chariot","Hammer" });
+
+	//print_all(gods);
+
+	Link* norse_gods = new Link{ "Thor","Norse","Chariot of Thunder","Hammer" };
+	Link* greek_gods= new Link{ "Zeus ","Greek","","Thunderbolts" };
+	Link* roman_gods=new Link{ "Apollo","Roman","Sun Chariot","Silver Bow and Arrow" };
+
+	lexicograph_order(gods, greek_gods);
+	lexicograph_order(gods, norse_gods);
+	lexicograph_order(gods, roman_gods);
 	
-	print_all(norse_gods);
-	cout << "\n";*/
-
-	Link* test = new Link{ "ac","Norse","vehcle","weapon" };
-	test = test->add_ordered(new Link{ "aa","Norse","vehcle","weapon" });
-	test = test->add_ordered(new Link{ "ab","Norse","vehcle","weapon" });
-	test = test->add_ordered(new Link{ "aac","Norse","vehcle","weapon" });
-	test = test->add_ordered(new Link{ "aaa","Norse","vehcle","weapon" });
-	test = test->advance(2);
-	cout << "Current link: " << test->god.name << '\n';
-	test = test->add_ordered(new Link{ "aaaa","Norse","vehcle","weapon" });
-	test = test->add_ordered(new Link{ "a","Norse","vehcle","weapon" });
-	test = test->add_ordered(new Link{ "z","Norse","vehcle","weapon" });
-	print_all(test);
-
-	/*
-	Link* norse_gods = new Link{ "Thor" };
-	norse_gods = norse_gods-> insert(new Link{ "Odin" });
-	norse_gods = norse_gods-> insert(new Link{ "Zeus" });
-	norse_gods = norse_gods-> insert(new Link{ "Freia" });
-
-	Link* greek_gods = new Link{ "Hera" };
-	greek_gods = greek_gods-> insert(new Link{ "Athena" });
-	greek_gods = greek_gods-> insert(new Link{ "Mars" });
-	greek_gods = greek_gods-> insert(new Link{ "Poseidon" });
-
-	Link* p = greek_gods-> find("Mars");
-	if (p) p-> value = "Ares";
-
-	Link* p2 = norse_gods-> find("Zeus");
-	if (p2) {
-		if (p2 == norse_gods) norse_gods = p2-> next();
-		p2-> erase();
-		greek_gods = greek_gods-> insert(p2);
-	}
-
-	print_all(norse_gods);
-	cout << "\n";
 	print_all(greek_gods);
-	cout << "\n";
-	*/
+	cout << '\n';
+	print_all(norse_gods);
+	cout << '\n';
+	print_all(roman_gods);
+	cout << '\n';
 
 	return 0;
 }
